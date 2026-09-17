@@ -72,6 +72,23 @@ def reverse_scale(s, max_val=5, min_val=1):
     return max_val + min_val - s
 
 
+def build_features(df, scores):
+    # 参照组：年龄19-30岁、教育本科及以上、城市温州、区域乡镇/农村
+    x = pd.DataFrame({
+        "Age1": (df["age"] == 1).astype(int), "Age2": (df["age"] == 3).astype(int),
+        "Age3": (df["age"] == 4).astype(int), "Age4": (df["age"] == 5).astype(int),
+        "Edu1": (df["education"] == 1).astype(int), "Edu2": (df["education"] == 2).astype(int),
+        "Edu3": (df["education"] == 3).astype(int), "Edu4": (df["education"] == 4).astype(int),
+        "CityHZ": (df["city"] == 1).astype(int), "CityNB": (df["city"] == 2).astype(int),
+        "Area1": (df["area"] == 1).astype(int), "Area2": (df["area"] == 2).astype(int),
+        "Area3": (df["area"] == 3).astype(int),
+        "Wall": (df["soundproof_wall"] == 1).astype(int),
+    })
+    for f in ["F1", "F2", "F3", "F4"]:
+        x[f] = scores[f]
+    return x
+
+
 def save_csv(df, subdir, name):
     path = os.path.join(OUT_DIR, subdir)
     os.makedirs(path, exist_ok=True)
