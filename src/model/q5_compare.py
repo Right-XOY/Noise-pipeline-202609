@@ -31,8 +31,10 @@ def main():
         po = OrderedModel(ytr, xtr, distr="logit").fit(method="bfgs", maxiter=1000, disp=False)
         pred_po = pred_logistic(po, xte)
 
-        xgbm = xgb.XGBRegressor(n_estimators=300, learning_rate=0.05, max_depth=4,
-                                subsample=0.8, colsample_bytree=0.8, random_state=42)
+        xgbm = xgb.XGBRegressor(n_estimators=299, learning_rate=0.1528, max_depth=5,
+                                subsample=0.655, colsample_bytree=0.865,
+                                reg_lambda=0.1303, reg_alpha=0.0705, min_child_weight=7,
+                                random_state=42)
         xgbm.fit(xtr, ytr)
         pred_xgb = np.clip(np.rint(xgbm.predict(xte)), 1, 5).astype(int)
 
