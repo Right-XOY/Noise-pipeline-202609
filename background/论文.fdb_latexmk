@@ -1,0 +1,16 @@
+# Fdb version 4
+["pdflatex"] 1789890945.32339 "d:/WorkPlace/声安浙里-pipeline-202609/background/论文.tex" "论文.pdf" "论文" 1789890945.81408 2
+  "cumcmthesis.cls" 0 -1 0 ""
+  "d:/Program Files (x86)/Work applications/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty" 1781711862 55384 b454dec21c2d9f45ec0b793f0995b992 ""
+  "d:/Program Files (x86)/Work applications/texlive/2026/texmf-dist/tex/xelatex/xecjk/xeCJK.sty" 1781711870 183137 ed372550124703b2b73cbcc0b47cb20f ""
+  "d:/Program Files (x86)/Work applications/texlive/2026/texmf-dist/web2c/texmf.cnf" 1781709726 43630 e9fa012910491fe5ae08a72c3c2997a7 ""
+  "d:/Program Files (x86)/Work applications/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1781712103 3637148 340c205218639c444e1d40ce452c29e5 ""
+  "d:/Program Files (x86)/Work applications/texlive/2026/texmf.cnf" 1781711946 713 e69b156964470283e0530f5060668171 ""
+  "d:/WorkPlace/声安浙里-pipeline-202609/background/论文.tex" 1789890941 126145 aa6dc83c3d8ceee5d8adb9807c28cd3e ""
+  "论文.aux" 1789890937 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "论文.tex" 1789890941 126145 aa6dc83c3d8ceee5d8adb9807c28cd3e ""
+  (generated)
+  "论文.aux"
+  "论文.log"
+  "论文.pdf"
+  (rewritten before read)

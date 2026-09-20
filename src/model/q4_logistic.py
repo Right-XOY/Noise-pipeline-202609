@@ -34,7 +34,8 @@ def parallel_test(y, x, po):
     init = np.concatenate([alpha0, np.tile(po.params[:-N_THR].to_numpy(), N_THR)])
     opt = minimize(negll, init, method="bfgs", options={"maxiter": 2000})
     chi2 = 2 * (-opt.fun - po.llf)
-    return chi2, k * (N_THR - 1), 1 - stats.chi2.cdf(chi2, k * (N_THR - 1))
+    gen_beta = opt.x[N_THR:].reshape(N_THR, k)  # 广义模型系数 (4切分点, 18变量)
+    return chi2, k * (N_THR - 1), 1 - stats.chi2.cdf(chi2, k * (N_THR - 1)), gen_beta
 
 
 def main():
@@ -93,10 +94,19 @@ def main():
         "nagelkerke": round(float(nagel), 3),
     }, "q4_logistic", "model_fit.json")
 
-    chi2, df_par, p_par = parallel_test(y, x, po)
+    chi2, df_par, p_par, gen_beta = parallel_test(y, x, po)
     pp.save_json({"po_2LL": round(float(-2 * po.llf), 3),
                   "chi2": round(float(chi2), 3), "df": df_par, "p": round(float(p_par), 3)},
                  "q4_logistic", "parallel_test.json")
+
+    # 敏感性分析：广义模型下 F1~F4 在各切分点的系数（论证核心结论稳健性）
+    f_cols = [list(x.columns).index(f) for f in ["F1", "F2", "F3", "F4"]]
+    sens = pd.DataFrame(
+        np.round(gen_beta[:, f_cols], 3),
+        columns=["F1", "F2", "F3", "F4"],
+        index=[f"切分点{j + 1}" for j in range(N_THR)],
+    ).reset_index().rename(columns={"index": "切分点"})
+    pp.save_csv(sens, "q4_logistic", "sensitivity.csv")
 
     vif = pd.DataFrame({"变量": list(x.columns),
                         "VIF": [round(variance_inflation_factor(x.to_numpy(), i), 3) for i in range(x.shape[1])]})

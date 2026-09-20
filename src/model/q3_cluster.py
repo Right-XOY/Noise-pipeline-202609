@@ -10,7 +10,6 @@ import preprocess as pp
 
 FACTORS = ["F1", "F2", "F3", "F4"]
 
-
 def main():
     scores = pd.read_csv(os.path.join(pp.OUT_DIR, "q2_efa", "factor_scores.csv"))
     x = scores[FACTORS].to_numpy()
@@ -28,6 +27,11 @@ def main():
     best_k = list(ks)[int(np.argmax(sil))]
     km = KMeans(n_clusters=best_k, init="k-means++", n_init=10, random_state=42)
     labels = km.fit_predict(x)
+
+    # 簇编号稳定化：按 F1 均值降序重编号，避免 KMeans 标签任意导致重排
+    order = sorted(range(best_k), key=lambda i: x[labels == i, 0].mean(), reverse=True)
+    remap = {old: new for new, old in enumerate(order)}
+    labels = np.array([remap[int(l)] for l in labels])
 
     result = scores[FACTORS].copy()
     result["cluster"] = labels

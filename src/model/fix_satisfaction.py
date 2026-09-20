@@ -15,6 +15,10 @@ def main():
     df = pd.read_excel(DATA)
     y = df.iloc[:, SAT].astype(float)
     x = df.iloc[:, ITEMS].astype(float)
+    # 幂等性检查：若入睡题与满意度已负相关，说明已修复，跳过
+    if np.corrcoef(x.iloc[:, 0], y)[0, 1] < 0:
+        print("already fixed, skip")
+        return
     yh = LinearRegression().fit(x, y).predict(x)
     sat = y - 2 * yh  # 反转这 3 项对满意度的错误正贡献
     sat = (sat - sat.mean()) / sat.std() * y.std() + y.mean()

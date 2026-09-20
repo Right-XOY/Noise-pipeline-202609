@@ -5,7 +5,7 @@ import optuna
 import pandas as pd
 import xgboost as xgb
 from sklearn.metrics import f1_score
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, train_test_split
 
 import preprocess as pp
 
@@ -14,7 +14,10 @@ def main():
     df = pp.clean(pp.load_raw())
     scores = pd.read_csv(os.path.join(pp.OUT_DIR, "q2_efa", "factor_scores.csv"))
     x = pp.build_features(df, scores)
-    y = df["satisfaction"].astype(int)
+    y = df["satisfaction"].astype(int).to_numpy() - 1  # 0-4
+
+    # 留出独立测试集，调参只在训练集上做
+    xtr, _, ytr, _ = train_test_split(x, y, test_size=0.2, stratify=y, random_state=42)
     skf = StratifiedKFold(5, shuffle=True, random_state=42)
 
     def objective(trial):
@@ -27,13 +30,15 @@ def main():
             "reg_lambda": trial.suggest_float("reg_lambda", 1e-3, 10, log=True),
             "reg_alpha": trial.suggest_float("reg_alpha", 1e-3, 10, log=True),
             "min_child_weight": trial.suggest_int("min_child_weight", 1, 10),
+            "objective": "multi:softprob",
+            "num_class": 5,
             "random_state": 42,
         }
         f1s = []
-        for tr, te in skf.split(x, y):
-            m = xgb.XGBRegressor(**params).fit(x.iloc[tr], y.iloc[tr])
-            pred = np.clip(np.rint(m.predict(x.iloc[te])), 1, 5).astype(int)
-            f1s.append(f1_score(y.iloc[te], pred, average="macro"))
+        for tr, te in skf.split(xtr, ytr):
+            m = xgb.XGBClassifier(**params).fit(xtr.iloc[tr], ytr[tr])
+            pred = m.predict(xtr.iloc[te])
+            f1s.append(f1_score(ytr[te], pred, average="macro"))
         return float(np.mean(f1s))
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)

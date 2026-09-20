@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 import semopy
 
@@ -29,11 +27,6 @@ def main():
     fit = {k: round(float(stats[k].iloc[0]), 3) for k in keys}
     pp.save_json(fit, "q7_sem", "fit.json")
     pp.save_csv(model.inspect(), "q7_sem", "params.csv")
-
-    fig_dir = os.path.join(pp.ROOT, "outputs", "figures")
-    os.makedirs(fig_dir, exist_ok=True)
-    semopy.semplot(model, os.path.join(fig_dir, "sem_path.png"),
-                   plot_covs=True, std_ests=True)
 
     print("SEM fitted")
     print(fit)

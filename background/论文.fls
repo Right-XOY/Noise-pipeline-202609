@@ -1,0 +1,8 @@
+PWD d:/WorkPlace/声安浙里-pipeline-202609/background
+INPUT d:/Program Files (x86)/Work applications/texlive/2026/texmf.cnf
+INPUT d:/Program Files (x86)/Work applications/texlive/2026/texmf-dist/web2c/texmf.cnf
+INPUT d:/Program Files (x86)/Work applications/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT d:/WorkPlace/声安浙里-pipeline-202609/background/论文.tex
+OUTPUT 论文.log
+INPUT d:/Program Files (x86)/Work applications/texlive/2026/texmf-dist/tex/xelatex/xecjk/xeCJK.sty
+INPUT d:/Program Files (x86)/Work applications/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
